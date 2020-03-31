@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>JavaScriptでプレイスフォルダを作ってみる</title>
+</head>
+<body>
+  <form method="get" action="#" id="form">
+    <input type="text" name="q" value="" size="40" id="keyword">
+    <input type="submit" value="検索">
+  </form>
+  <script src="./js/jquery1.11.1.min.js"></script>
+  <script>
+    (function($) {
+      $(document).ready(function() {
+        var placeholder = (function () {
+          var msg  = '検索キーワードを入力してください。';
+          var func = function (id) {
+            var self = this;
+            self.empty = true;
+            self.black = '#999999';
+            self.gray  = '#5a5a5a';
+            self.elem  = $(id)
+              .focus(function(){ self.msgClear(); })
+              .blur (function(){ self.msgShow();  });
+          };
+          func.prototype = (function () {
+            return {
+              msgShow: function () {
+                this.empty = false;
+                if ( ! this.elem.val()) {
+                  this.empty = true;
+                  this.elem.css('color',self.black).val(msg);
+                }
+              },
+              msgClear: function () {
+                if (this.empty === true) {
+                  this.elem.css('color', self.gray).val('');
+                }
+              },
+              msgClean: function () {
+                if (this.empty === true && this.elem.val() === msg){
+                  this.elem.val('');
+                }
+              }
+            };
+          }());
+          return func;
+        }());
+  
+        var input = new placeholder('#keyword');
+        input.msgShow();
+        $('#form').submit(function(){ input.msgClean(); });
+      });
+    }(jQuery));
+  </script>
+</body>
+</html>
